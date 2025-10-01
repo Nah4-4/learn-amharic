@@ -1,17 +1,18 @@
 import { useState } from "react";
-import "./App.css";
+import "./Game.css";
 
-function App() {
-  //add end logic
-  //add wrong answer review
+function Game() {
+  //add dark mode
+
   //add settings for number of questions
   //*add sound
   //*add multiple choice option
-  //add dark mode
   //*add progress bar
   //add reset score
   //add instructions
   //add about
+  //add end logic
+  //add wrong answer review
 
   const letters =[
     "ሀ","ሁ","ሂ","ሃ","ሄ","ህ","ሆ",
@@ -138,28 +139,34 @@ function App() {
   }
   return (
     <>
-      <div className="score">
-        <div style={{display:"flex",gap:"0.4rem"}}>
-          <h2>Score: </h2>
-          <h2>{score}</h2>
+      <div className="game">
+        <div className="score">
+          <div style={{display:"flex",gap:"0.4rem"}}>
+            <h2>Score: </h2>
+            <h2>{score}</h2>
+          </div>
+        </div>
+        <div className="body">
+          <h1>{letters[randomIndex]}</h1>
+          <div>
+
+          <h2 style={{color: showAnswer?"black":"transparent"}}>{pron[randomIndex]}</h2>
+          </div>
+        </div>
+          <div className="next">
+            <button disabled={!nextBool} onClick={nextLetter}>Next</button>
+          </div>
+        <div className="show">
+          <button onClick={handleShowAnswer}>show answer</button>
+        </div>
+        <div className="check">
+          <button onClick={handleWrongScore} style={{ backgroundColor: "red" }}>Wrong</button>
+          <button onClick={handleCorrectScore} style={{ backgroundColor: "lime" }}>Correct</button>
         </div>
       </div>
-      <div className="body">
-        <h1>{letters[randomIndex]}</h1>
-        <h2 style={{display: showAnswer?"inline-block":"none"}}>{pron[randomIndex]}</h2>
-        <div className="controls">
-          <button disabled={!nextBool} onClick={nextLetter}>Next</button>
-        </div>
-      </div>
-      <div className="show">
-        <button onClick={handleShowAnswer}>show answer</button>
-      </div>
-      <div className="check">
-        <button onClick={handleWrongScore} style={{ backgroundColor: "red" }}>Wrong</button>
-        <button onClick={handleCorrectScore} style={{ backgroundColor: "lime" }}>Correct</button>
-      </div>
+
     </>
   );
 }
 
-export default App;
+export default Game;
