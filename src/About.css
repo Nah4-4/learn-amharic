@@ -1,0 +1,42 @@
+.about-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: "Poppins", sans-serif;
+}
+
+.about-content {
+  max-width: 800px;
+  text-align: center;
+  margin-top: 4rem;
+  padding: 0 1rem;
+}
+
+.about-content h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.about-content p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-size: large;
+}
+.credits{
+    margin-top: 5rem;
+}
+
+.credits span {
+  color: #ffa726;
+  font-weight: 500;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  font-size: 1.8rem;
+}

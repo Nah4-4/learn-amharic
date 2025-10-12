@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Game.css";
 import Setting from "./Setting";
 import { useNavigate } from "react-router-dom";
 import Card from "./Card";
+import { useRef } from "react";
 
 function Game() {
   //*add multiple choice option
-  const data = [
+   const data = [
     { key: 1, am: "ሀ", en: "ha" },
     { key: 2, am: "ሁ", en: "hu" },
     { key: 3, am: "ሂ", en: "hi" },
@@ -247,6 +248,7 @@ function Game() {
     { key: 238, am: "ቮ", en: "vo" },
   ];
   const [wrongAnswers, setWrongAnswers] = useState([]);
+  const [totalWrongAnswers, setTotalWrongAnswers] = useState([]);
   const navigate = useNavigate();
   const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState(0);
@@ -255,6 +257,7 @@ function Game() {
   const [openSetting, setOpenSetting] = useState(false);
   const [openContinue, setOpenContinue] = useState(false);
   const [count, setCount] = useState(1);
+  const [end, setEnd] = useState(false);
   const [gameSettings, setGameSettings] = useState(() => {
     const storedVolume = localStorage.getItem("volume");
     const storedLetters = localStorage.getItem("letters");
@@ -266,8 +269,6 @@ function Game() {
 
   const openHandler = () => setOpenSetting(true);
   const closeHandler = () => setOpenSetting(false);
-
-  // Assuming data = [{ key: 1, am: "አ", en: "a" }, { key: 2, am: "በ", en: "b" }, ...]
 
   const getShuffledPool = () => {
     // Shuffle based on object indices
@@ -291,20 +292,17 @@ function Game() {
   function nextLetter() {
     setCount((prev) => prev + 1);
     let newPool = [...pool];
-
+    //end
     if (newPool.length === 0) {
-      console.log("end");
-      // Add your end-game logic here
+      setWrongAnswers([...totalWrongAnswers, ...wrongAnswers]);
+      setOpenContinue(true);
+      setEnd(true);
       return;
     }
-
+    //continue page
     if (count === gameSettings.letters) {
       setCount(1);
       setOpenContinue(true);
-      // if (!continueGame) {
-      //   navigate("/");
-      //   return;
-      // }
     }
 
     const nextIdx = newPool.pop();
@@ -323,6 +321,7 @@ function Game() {
       setScore(score + 1);
       setCheckBool(false);
       setNextBool(true);
+      setShowAnswer(true);
     }
   }
   function handleWrongScore() {
@@ -330,11 +329,40 @@ function Game() {
       setWrongAnswers([...wrongAnswers, currentItem]);
       setCheckBool(false);
       setNextBool(true);
+      setShowAnswer(true);
     }
   }
   function handleSettingsSave(data) {
     setGameSettings(data);
   }
+  function handleGoHome() {
+    navigate("/");
+  }
+  function handleContinueGame() {
+    setOpenContinue(false);
+    setTotalWrongAnswers((prev) => [...prev, ...wrongAnswers]);
+    setWrongAnswers([]);
+  }
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    if (hasMounted.current) {
+      const newPool = getShuffledPool();
+      const newIndex = newPool.pop();
+      setPool(newPool);
+      setRandomIndex(newIndex);
+      setScore(0);
+      setWrongAnswers([]);
+      setCount(1);
+      setShowAnswer(false);
+      setCheckBool(true);
+      setNextBool(false);
+      setOpenContinue(false);
+      setEnd(false);
+    } else {
+      hasMounted.current = true; // skip first run
+    }
+  }, [gameSettings]);
 
   return (
     <>
@@ -348,14 +376,41 @@ function Game() {
       {openContinue && (
         <div>
           <div className="wrapper">
-            <h2>Wrong Answers</h2>
+            {!end ? (
+              <h2>Wrong Answers Review</h2>
+            ) : (
+              <h2>Final Wrong Answers Review</h2>
+            )}
+            {end && <h2 style={{ marginTop: "0" }}>Score: {score}</h2>}
+            {wrongAnswers.length === 0 && (
+              <h2 style={{ fontWeight: "normal" }}>No wrong answers</h2>
+            )}
             <div className="card-grid">
               <Card data={wrongAnswers}></Card>
             </div>
           </div>
-          <div style={{margin:"1rem", textAlign:"end", paddingRight:"2rem", gap:"3rem"}}>
-            <button style={{padding:"0.8rem", marginRight:"1rem"}}>Go to home</button>
-            <button style={{padding:"0.8rem"}}>Continue  -{">"}</button>
+          <div
+            style={{
+              margin: "1rem",
+              textAlign: "end",
+              paddingRight: "2rem",
+              gap: "3rem",
+            }}
+          >
+            <button
+              style={{ padding: "0.8rem", marginRight: "1rem" }}
+              onClick={handleGoHome}
+            >
+              Go to home
+            </button>
+            {!end && (
+              <button
+                style={{ padding: "0.8rem" }}
+                onClick={handleContinueGame}
+              >
+                Continue -{">"}
+              </button>
+            )}
           </div>
         </div>
       )}
