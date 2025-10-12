@@ -45,7 +45,7 @@
   font-size: x-large;
   padding: 0.5rem 0.5rem;
 }
-.wrapper{
+.wrapper {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   box-shadow: 0 5px 16px -2px rgba(0, 0, 0, 0.1);
@@ -62,7 +62,32 @@
   justify-items: center;
   padding: 0 3rem 3rem 3rem;
 }
+.option {
+  align-content: center;
+  margin-right: 4rem;
+  z-index: 1;
+}
 
-button:disabled{
-  color:gray;
+button:disabled {
+  color: gray;
+}
+@media (max-width: 800px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
+  }
+  .option {
+    margin-right: 1.2rem;
+  }
+  .game button {
+    padding: 0.8rem 1.6rem;
+  }
+  .option .settings{
+    padding: 0.5rem 0.5rem;
+  }
+  .game h1{
+    font-weight: 300;
+  }
+  .body h2{
+    font-size: 1.8rem;
+  }
 }

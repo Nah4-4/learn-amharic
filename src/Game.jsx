@@ -7,7 +7,7 @@ import { useRef } from "react";
 
 function Game() {
   //*add multiple choice option
-   const data = [
+  const data = [
     { key: 1, am: "ሀ", en: "ha" },
     { key: 2, am: "ሁ", en: "hu" },
     { key: 3, am: "ሂ", en: "hi" },
@@ -421,9 +421,7 @@ function Game() {
               <h2>Score: </h2>
               <h2>{score}</h2>
             </div>
-            <div
-              style={{ alignContent: "center", marginRight: "4rem", zIndex: 1 }}
-            >
+            <div className="option">
               <button
                 aria-label="settings"
                 className="settings"

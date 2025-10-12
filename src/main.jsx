@@ -7,17 +7,22 @@ import RootLayout from "./RootLayout.jsx";
 import Home from "./Home.jsx";
 import About from "./About.jsx";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <RootLayout />,
+      children: [
+        { path: "/", element: <Home /> },
+        { path: "/play", element: <Game /> },
+        { path: "/about", element: <About /> },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <RootLayout />,
-    children: [
-      { path: "/", element: <Home /> },
-      { path: "/play", element: <Game /> },
-      { path: "/about", element: <About /> },
-    ],
-  },
-]);
+    basename: "/learn-amharic",
+  }
+);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

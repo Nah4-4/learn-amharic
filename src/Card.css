@@ -13,3 +13,15 @@
     font-size: 2rem;
     margin: auto;
 }
+@media (max-width:600px) {
+  .card{
+    width: 8rem;
+    height: 8rem;
+  }
+  .card h1{
+    font-size: 3.2rem;
+  }
+  .card p{
+    font-size: 1.4rem;
+  }
+}
