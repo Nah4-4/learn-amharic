@@ -92,6 +92,7 @@ export default function Setting({ open, onClose, onSave }) {
                 </button>
               ))}
             </div>
+            <span>Per Round</span>
           </div>
 
           <div className="help">

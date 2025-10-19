@@ -1,0 +1,49 @@
+.how-to-use {
+  max-width: 750px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  font-family: "Inter", sans-serif;
+  line-height: 1.7;
+}
+
+.how-to-use h1 {
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+
+.how-to-use h2 {
+  margin-top: 1.8rem;
+}
+
+.how-to-use ol {
+  margin-left: 1rem;
+  padding-left: 1rem;
+  text-align: initial;
+}
+.how-to-use ul {
+  margin-left: 1rem;
+  padding-left: 1rem;
+  list-style-position: inside;
+}
+
+.how-to-use li {
+  margin: 0.5rem 0;
+}
+
+.footer-note {
+  text-align: center;
+  margin-top: 2rem;
+  font-style: italic;
+}
+.how-to-use span{
+border-radius: 18px;
+  border: 1px solid transparent;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.9em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  background-color: var(--hbg);
+  color: var(--bnc);
+  border: 1px solid var(--bnb);
+}

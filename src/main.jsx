@@ -6,6 +6,7 @@ import Game from "./Game.jsx";
 import RootLayout from "./RootLayout.jsx";
 import Home from "./Home.jsx";
 import About from "./About.jsx";
+import HowToUse from "./How-to.jsx";
 
 const router = createBrowserRouter(
   [
@@ -16,6 +17,7 @@ const router = createBrowserRouter(
         { path: "/", element: <Home /> },
         { path: "/play", element: <Game /> },
         { path: "/about", element: <About /> },
+        { path: "/how-to", element: <HowToUse /> },
       ],
     },
   ],

@@ -1,4 +1,17 @@
-.main{
-    display: flex;
-    flex-direction: column;
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-content: center;
+  justify-content: center;
+  height: 100%;
+}
+.main a {
+  background-color: var(--fg);
+  color: var(--bg);
+  font-size: 1.4rem;
+  text-decoration: none;
+  border-radius: 40px;
+  padding: 0.8rem 2.2rem;
+  font-weight: 500;
 }
