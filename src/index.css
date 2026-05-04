@@ -69,7 +69,7 @@ a{
 button {
   background-color: var(--hbg);
   color: var(--bnc);
-  border: 1px solid var(--bnb);
+  border: 1.5px solid var(--bnb);
 }
 button:hover {
   background-color: var(--bnh);

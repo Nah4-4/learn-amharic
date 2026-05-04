@@ -5,9 +5,20 @@ import { useNavigate } from "react-router-dom";
 import Card from "./Card";
 import { useRef } from "react";
 
+function getShuffledPool(items) {
+  const arr = Array.from({ length: items }, (_, i) => i);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+const LETTER_COUNT = 238;
+
 function Game() {
   //*add multiple choice option
-  const data = [
+  const dataRef = useRef([
     { key: 1, am: "ሀ", en: "ha" },
     { key: 2, am: "ሁ", en: "hu" },
     { key: 3, am: "ሂ", en: "hi" },
@@ -246,7 +257,8 @@ function Game() {
     { key: 236, am: "ቬ", en: "vēa" },
     { key: 237, am: "ቭ", en: "v/vi" },
     { key: 238, am: "ቮ", en: "vo" },
-  ];
+  ]);
+  const data = dataRef.current;
   const [wrongAnswers, setWrongAnswers] = useState([]);
   const [totalWrongAnswers, setTotalWrongAnswers] = useState([]);
   const navigate = useNavigate();
@@ -270,22 +282,11 @@ function Game() {
   const openHandler = () => setOpenSetting(true);
   const closeHandler = () => setOpenSetting(false);
 
-  const getShuffledPool = () => {
-    // Shuffle based on object indices
-    const arr = Array.from({ length: data.length }, (_, i) => i);
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
+  const initialPool = useRef(getShuffledPool(LETTER_COUNT));
+  const initialIndex = useRef( initialPool.current.pop());
 
-  const initialPool = getShuffledPool();
-  const initialIndex = initialPool.pop();
-
-  const [pool, setPool] = useState(initialPool);
-  const [randomIndex, setRandomIndex] = useState(initialIndex);
-
+  const [pool, setPool] = useState(initialPool.current);
+  const [randomIndex, setRandomIndex] = useState(initialIndex.current);
   const currentItem = data[randomIndex];
   // currentItem.am, currentItem.en, currentItem.key
 
@@ -304,7 +305,6 @@ function Game() {
       setCount(1);
       setOpenContinue(true);
     }
-
     const nextIdx = newPool.pop();
     setPool(newPool);
     setRandomIndex(nextIdx);
@@ -315,6 +315,8 @@ function Game() {
 
   function handleShowAnswer() {
     setShowAnswer(true);
+    // play audio when showing the answer
+    playAudio();
   }
   function handleCorrectScore() {
     if (checkBool) {
@@ -323,6 +325,8 @@ function Game() {
       setNextBool(true);
       setShowAnswer(true);
     }
+    if(!showAnswer)
+      playAudio();
   }
   function handleWrongScore() {
     if (checkBool) {
@@ -331,6 +335,8 @@ function Game() {
       setNextBool(true);
       setShowAnswer(true);
     }
+    if(!showAnswer)
+      playAudio();
   }
   function handleSettingsSave(data) {
     setGameSettings(data);
@@ -344,10 +350,103 @@ function Game() {
     setWrongAnswers([]);
   }
   const hasMounted = useRef(false);
+  const audio = useRef(new Audio());
+  const audioRef = useRef(null);
+  const endTimerRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playError, setPlayError] = useState(false);
+  const AUDIO_PLAYBACK_RATE = 1;
+  const AUDIO_END_TAIL_MS = 20;
+
+  function getAudioFilename(key) {
+    // files in public/audio are named like "Sound 01.mp3" for 1-9 and "Sound X.mp3" otherwise
+    if (!key && key !== 0) return null;
+    const n = Number(key);
+    if (Number.isNaN(n)) return null;
+    const name = n < 10 ? `Sound 0${n}.mp3` : `Sound ${n}.mp3`;
+    const base =
+      typeof import.meta !== "undefined" &&
+      import.meta.env &&
+      import.meta.env.BASE_URL
+        ? import.meta.env.BASE_URL
+        : "/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    return `${normalizedBase}audio/${name}`;
+  }
+
+  function playAudio() {
+    try {
+      setPlayError(false);
+      setIsPlaying(false);
+      if (endTimerRef.current) {
+        clearTimeout(endTimerRef.current);
+        endTimerRef.current = null;
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      audio.current.volume = (gameSettings.volume ?? 50) / 100;
+      audio.current.playbackRate = AUDIO_PLAYBACK_RATE;
+      audioRef.current = audio.current;
+      audio.current.onended = () => {
+        endTimerRef.current = setTimeout(() => {
+          setIsPlaying(false);
+          endTimerRef.current = null;
+        }, AUDIO_END_TAIL_MS);
+      };
+      audio.current.onerror = () => {
+        setIsPlaying(false);
+        setPlayError(true);
+      };
+      const playPromise = audio.current.play();
+      if (playPromise && typeof playPromise.then === "function") {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            setPlayError(false);
+          })
+          .catch(() => {
+            setIsPlaying(false);
+            setPlayError(true);
+          });
+      } else {
+        // fallback
+        setIsPlaying(true);
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = (gameSettings.volume ?? 50) / 100;
+    }
+  }, [gameSettings.volume]);
+
+  useEffect(() => {
+    return () => {
+      if (endTimerRef.current) {
+        clearTimeout(endTimerRef.current);
+        endTimerRef.current = null;
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const src = getAudioFilename(currentItem?.key);
+    audio.current.src = src;
+    audio.current.load();
+  },[currentItem]);
 
   useEffect(() => {
     if (hasMounted.current) {
-      const newPool = getShuffledPool();
+      const newPool = getShuffledPool(LETTER_COUNT);
       const newIndex = newPool.pop();
       setPool(newPool);
       setRandomIndex(newIndex);
@@ -362,7 +461,7 @@ function Game() {
     } else {
       hasMounted.current = true; // skip first run
     }
-  }, [gameSettings]);
+  }, [gameSettings.letters]);
 
   return (
     <>
@@ -446,6 +545,20 @@ function Game() {
           </div>
           <div className="show">
             <button onClick={handleShowAnswer}>Show answer</button>
+            {showAnswer && (
+              <>
+                <button onClick={playAudio} style={{ marginLeft: "0.5rem" }}>
+                  Replay
+                </button>
+                <span style={{ marginLeft: "0.6rem", fontSize: "0.9rem" }}>
+                  {isPlaying
+                    ? "🔊 Playing"
+                    : playError
+                      ? "⚠️ Audio blocked/unavailable. Retry"
+                      : ""}
+                </span>
+              </>
+            )}
           </div>
           <div className="check">
             <button className="wrong" onClick={handleWrongScore}>
