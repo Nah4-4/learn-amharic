@@ -22,7 +22,7 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: "/learn-amharic",
+    basename: "/",
   }
 );
 
