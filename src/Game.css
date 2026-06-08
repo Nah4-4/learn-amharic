@@ -23,7 +23,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
 }
 .check {
   gap: 10px;
@@ -42,8 +41,7 @@
 }
 .settings {
   border-radius: 100px;
-  font-size: x-large;
-  padding: 0.5rem 0.5rem;
+  padding: 0.6rem 0.6rem;
 }
 .wrapper {
   background: rgba(255, 255, 255, 0.1);
@@ -64,9 +62,14 @@
 }
 .option {
   align-content: center;
-  margin-right: 4rem;
+  margin-right: 3.8rem;
   z-index: 1;
 }
+.option .settings p{
+    margin: 0rem;
+    font-size:x-large;
+    margin-bottom: 1px;
+  }
 
 button:disabled {
   color: gray;
@@ -83,6 +86,9 @@ button:disabled {
   }
   .option .settings{
     padding: 0.5rem 0.5rem;
+  }
+  .option .settings p{
+    margin: 0rem;
   }
   .game h1{
     font-weight: 300;

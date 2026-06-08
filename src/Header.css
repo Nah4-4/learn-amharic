@@ -1,7 +1,7 @@
 header {
   display: flex;
   align-items: center;
-  padding: 0.6rem 0;
+  padding: 0.4rem 0;
   justify-content: space-between;
   margin-bottom: 0.7rem;
 }
@@ -13,8 +13,11 @@ header a {
 }
 header button {
   border-radius: 100px;
-  font-size: x-large;
-  padding: 0.5rem 0.5rem;
+  padding: 6px 11px;  
+  background-color: var(--lt);
+}
+header button:hover{
+  background-color: var(--lt);
 }
 .options {
   display: flex;

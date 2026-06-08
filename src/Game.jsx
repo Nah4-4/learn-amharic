@@ -283,7 +283,7 @@ function Game() {
   const closeHandler = () => setOpenSetting(false);
 
   const initialPool = useRef(getShuffledPool(LETTER_COUNT));
-  const initialIndex = useRef( initialPool.current.pop());
+  const initialIndex = useRef(initialPool.current.pop());
 
   const [pool, setPool] = useState(initialPool.current);
   const [randomIndex, setRandomIndex] = useState(initialIndex.current);
@@ -325,8 +325,7 @@ function Game() {
       setNextBool(true);
       setShowAnswer(true);
     }
-    if(!showAnswer)
-      playAudio();
+    if (!showAnswer) playAudio();
   }
   function handleWrongScore() {
     if (checkBool) {
@@ -335,8 +334,7 @@ function Game() {
       setNextBool(true);
       setShowAnswer(true);
     }
-    if(!showAnswer)
-      playAudio();
+    if (!showAnswer) playAudio();
   }
   function handleSettingsSave(data) {
     setGameSettings(data);
@@ -442,7 +440,7 @@ function Game() {
     const src = getAudioFilename(currentItem?.key);
     audio.current.src = src;
     audio.current.load();
-  },[currentItem]);
+  }, [currentItem]);
 
   useEffect(() => {
     if (hasMounted.current) {
@@ -526,7 +524,7 @@ function Game() {
                 className="settings"
                 onClick={openHandler}
               >
-                ⚙️
+                <p className="gear">⚙️</p>
               </button>
             </div>
           </div>
