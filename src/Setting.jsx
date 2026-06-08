@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./setting.css";
+import "./Setting.css";
 
 export default function Setting({ open, onClose, onSave }) {
   const TOTAL = 238;
