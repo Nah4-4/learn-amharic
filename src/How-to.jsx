@@ -1,4 +1,4 @@
-import "./how-to.css";
+import "./How-to.css";
 export default function HowToUse() {
   return (
     <div className="how-to-use">
